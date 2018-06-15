@@ -27,7 +27,7 @@ columns_name = df.columns.values.tolist()
 
 print('There are:', len(columns_name), ' columns')
 for i in range(1, len(df.columns)-2, 4):
-    print(columns_name[i], ':', columns_name[i+2])
+    print('Comparing:', columns_name[i], ' and ', columns_name[i+2])
     dif = df.iloc[-1, i] - df.iloc[-1, i+2]
     if (dif > 0):
         possitive_bar_list.append(dif)
