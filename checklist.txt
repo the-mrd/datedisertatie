@@ -1,0 +1,8 @@
+Urmatoarele grafice defalcate pe mobilitate, cardio si capacitate
+coordonativa:
+1. Diferenta in medie in TI intre cele 2 grupuri
+2. Diferenta in medie in TF intre cele 2 grupuri
+3. Diferente in medie intre TI si TF in grupul GP
+4. Diferente in medie intre TI si TF in grupul IE
+
+5. Deviatie standard pentru fiecare test initial 
