@@ -30,9 +30,7 @@ def draw_label(ax, rects, names, max_height):
 
 
 #df = pd.read_excel('./Datedisertatie.xlsx')
-#df = pd.read_excel('./mobilitate/mobilitate.xlsx')
-df = pd.read_excel('./cardio/cardio.xlsx')
-
+df = pd.read_excel('./mobilitate.xlsx')
 mobdf = df.iloc[1:,1:]
 mobdf_norm = normalize(mobdf)
 #df = normalize(df)
@@ -52,22 +50,7 @@ maxim=0
 possitive_bar_list=[]
 negative_bar_list=[]
 
-groups = df.groupby(df.columns.str.extract(r'.+(T\.I\..*P\.G\.).*',expand=False), axis=1)
 
-x=np.arange(0, 10);
-# Plot
-plt.rcParams.update(pd.tools.plotting.mpl_stylesheet)
-colors = pd.tools.plotting._get_standard_colors(len(groups), color_type='random')
-fig, ax = plt.subplots()
-ax.set_color_cycle(colors)
-ax.margins(0.05)
-for name, group in groups:
-    ax.plot(group.x, group.y, marker='o', linestyle='', ms=12, label=name)
-ax.legend(numpoints=1, loc='upper left')
-
-plt.show()
-
-"""
 print('There are:', len(columns_name), ' columns')
 for i in range(1, len(df.columns)-2, 4):
 #for i in range(1, len(df.columns)//2-2, 4):
@@ -86,7 +69,6 @@ for i in range(1, len(df.columns)-2, 4):
 
     maxim=max(possitive_bar_list)
 
-
 width = 0.3
 x1 = 2*np.arange(len(possitive_bar_list))
 x2 = 2*np.arange(len(negative_bar_list)) + 1
@@ -101,8 +83,8 @@ negative_rects = ax.bar(x2, negative_bar_list, width=width, alpha=0.8,
 
 draw_label(ax, positive_rects, possitive_x_names, maxim)
 draw_label(ax, negative_rects, negative_x_names, maxim)
-plt.title(r'Diferente \textit{in medie} la \textbf{Testarea Initiala} intre cele doua grupuri')
+plt.title(r'Diferenta \textit{in medie} la \textbf{Testarea Initiala de mobilitate} intre cele doua grupuri')
 plt.legend()
 #plt.savefig('difmedti2.png')
 plt.show()
-"""
+
