@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -76,18 +77,16 @@ def create_graph(xls_path,start_pos, end_pos_offset, step, cmp_offset, color1, c
 	print('There are:', len(columns_name), ' columns in xls file: ',xls_path)
 
 	for i in range(start_pos, len(df.columns)-end_pos_offset, step):
-		print('Comparing:', columns_name[i], ' and ', columns_name[i+1])
-		if percent == True:
-			dif = (df.iloc[-1, i+cmp_offset] - df.iloc[-1, i])/df.iloc[-1, i]*100
-		else:
-			dif = df.iloc[-1, i+cmp_offset] - df.iloc[-1, i]
+		print('Diffing:', columns_name[i+cmp_offset], ' and ', columns_name[i])
+
+		dif = df.iloc[-1, i] - df.iloc[-1, i+cmp_offset]
 
 		if (dif > 0):
-			possitive_bar_list.append(dif)
+			possitive_bar_list.append(dif/df.iloc[-1,i+cmp_offset])
 			#possitive_x_names.append(u' '.join((columns_name[i])).encode('utf-8').strip())
 			possitive_x_names.append(str(columns_name[i]))
 		else:
-			negative_bar_list.append(dif)
+			negative_bar_list.append(dif/df.iloc[-1,i])
 			#negative_x_names.append(u' '.join((columns_name[i])).encode('utf-8').strip())
 			negative_x_names.append(str(columns_name[i]))
 
@@ -105,13 +104,50 @@ def create_graph(xls_path,start_pos, end_pos_offset, step, cmp_offset, color1, c
 	negative_rects = ax.bar(x2, negative_bar_list, width=width, alpha=0.8,
 				color=color2, label=label2)
 
+
 	autolabel(positive_rects, ax, possitive_x_names)
 	autolabel(negative_rects, ax, negative_x_names, bottom=True)
+	
+	all_rects = []
+	all_rects = negative_bar_list + possitive_bar_list
+	all_rects = sorted(all_rects)
+
+	print(all_rects)
+
+	plt.ylabel('Procente')
+
+	major_ticks = 2*np.arange(0, len(all_rects)-2, len(all_rects)/5)
+	minor_ticks = 2*np.arange(0, len(all_rects)-2, len(all_rects)/20)
+
+	#ax.set_xticks(major_ticks)
+	#ax.set_xticks(minor_ticks, minor=True)
+	neg_round = [ round(elem, 2) for elem in negative_bar_list]
+	pos_round = [ round(elem, 2) for elem in possitive_bar_list]
+
+	major_ticks = np.arange(min(neg_round), max(pos_round)+0.1, (abs(min(neg_round))+max(pos_round))/5)
+	minor_ticks = np.arange(min(neg_round), max(pos_round)+0.1, (abs(min(neg_round))+max(pos_round))/20)
+
+	ax.set_yticks(major_ticks)
+	ax.set_yticks(minor_ticks, minor=True)
+	
+	ax.grid(which='minor', alpha=0.2)
+	ax.grid(which='major', alpha=0.5)
+	#plt.yticks(all_rects)
+
 	plt.title(titlu)
+
+
 	plt.legend()
+	plt.tick_params( axis='x',          # changes apply to the x-axis
+		which='both',      # both major and minor ticks are affected
+		bottom=False,      # ticks along the bottom edge are off
+		top=False,         # ticks along the top edge are off
+		labelbottom=False) # labels along the bottom edge are off
+
 	plt.savefig(outfile)
 	plt.show()
 
+"""
 xls='./mobilitate.xlsx'
 start=1
 end=2
@@ -124,5 +160,6 @@ label1='Imbunatatire'
 label2='Degradare'
 title=r'Diferenta \textit{in medie} dintre Testarea \textbf{Finala} si cea \textbf{Initiala} de mobilitate in grupul IE'
 outf='delme.png'
+"""
 
-create_graph(xls, start, end, step, compare_offset, c1, c2, percent, label1, label2, title, outf)
+#create_graph(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6],sys.argv[7],sys.argv[8],sys.argv[9],sys.argv[10],sys.argv[11],sys.argv[12])

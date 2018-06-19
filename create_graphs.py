@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -76,7 +77,7 @@ def create_graph(xls_path,start_pos, end_pos_offset, step, cmp_offset, color1, c
 	print('There are:', len(columns_name), ' columns in xls file: ',xls_path)
 
 	for i in range(start_pos, len(df.columns)-end_pos_offset, step):
-		print('Comparing:', columns_name[i], ' and ', columns_name[i+1])
+		print('Diffing:', columns_name[i+cmp_offset], ' and ', columns_name[i])
 		if percent == True:
 			dif = (df.iloc[-1, i+cmp_offset] - df.iloc[-1, i])/df.iloc[-1, i]*100
 		else:
@@ -93,7 +94,7 @@ def create_graph(xls_path,start_pos, end_pos_offset, step, cmp_offset, color1, c
 
 	    #maxim=max(possitive_bar_list)
 
-	width = 0.3
+	width = 0.5
 	x1 = 2*np.arange(len(possitive_bar_list))
 	x2 = 2*np.arange(len(negative_bar_list)) + 1
 	fig, ax = plt.subplots(figsize=(12,5), dpi=100) #portrait paper
@@ -105,13 +106,48 @@ def create_graph(xls_path,start_pos, end_pos_offset, step, cmp_offset, color1, c
 	negative_rects = ax.bar(x2, negative_bar_list, width=width, alpha=0.8,
 				color=color2, label=label2)
 
+
 	autolabel(positive_rects, ax, possitive_x_names)
 	autolabel(negative_rects, ax, negative_x_names, bottom=True)
+	
+	all_rects = []
+	all_rects = negative_bar_list + possitive_bar_list
+	all_rects = sorted(all_rects)
+
+	print(all_rects)
+
+	plt.ylabel('Procente')
+
+	#major_ticks = 2*np.arange(0, 1, 1)
+	#minor_ticks = 2*np.arange(0, 1, 1)
+
+	ax.set_xticks([])
+	ax.set_xticks([], minor=True)
+
+	major_ticks = np.arange(min(negative_bar_list), max(possitive_bar_list)+2, (abs(min(negative_bar_list))+max(possitive_bar_list)+2)/5)
+	minor_ticks = np.arange(min(negative_bar_list), max(possitive_bar_list)+2, (abs(min(negative_bar_list))+max(possitive_bar_list)+2)/20)
+
+	ax.set_yticks(major_ticks)
+	ax.set_yticks(minor_ticks, minor=True)
+	
+	ax.grid(which='minor', alpha=0.2)
+	ax.grid(which='major', alpha=0.5)
+	#plt.yticks(all_rects)
+
 	plt.title(titlu)
+
+
 	plt.legend()
+	plt.tick_params( axis='x',          # changes apply to the x-axis
+		which='both',      # both major and minor ticks are affected
+		bottom=False,      # ticks along the bottom edge are off
+		top=False,         # ticks along the top edge are off
+		labelbottom=False) # labels along the bottom edge are off
+
 	plt.savefig(outfile)
 	plt.show()
 
+"""
 xls='./mobilitate.xlsx'
 start=1
 end=2
@@ -124,5 +160,6 @@ label1='Imbunatatire'
 label2='Degradare'
 title=r'Diferenta \textit{in medie} dintre Testarea \textbf{Finala} si cea \textbf{Initiala} de mobilitate in grupul IE'
 outf='delme.png'
+"""
 
-create_graph(xls, start, end, step, compare_offset, c1, c2, percent, label1, label2, title, outf)
+#create_graph(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6],sys.argv[7],sys.argv[8],sys.argv[9],sys.argv[10],sys.argv[11],sys.argv[12])
